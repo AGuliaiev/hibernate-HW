@@ -1,7 +1,8 @@
 
 import enams.Type;
 import models.Car;
-import models.Word;
+import models.DriveLicense;
+import models.Owner;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -10,7 +11,7 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
-import java.util.List;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -18,8 +19,9 @@ public class Main {
                 .configure("hibernate.cfg.xml")
                 .build();
         Metadata metadata = new MetadataSources(serviceRegistry)
-                .addAnnotatedClass(Word.class)
                 .addAnnotatedClass(Car.class)
+                .addAnnotatedClass(DriveLicense.class)
+                .addAnnotatedClass(Owner.class)
                 .getMetadataBuilder()
                 .build();
 
@@ -28,31 +30,29 @@ public class Main {
                 Session session = sessionFactory.openSession();
                 ) {
             Transaction transaction = session.beginTransaction();
-            Word word1 = new Word();
-            Word word2 = new Word();
-            Word word3 = new Word();
 
-            word1.setValue("apple");
-            word2.setValue("pen");
-            word3.setValue("notebook");
+//            Owner owner = new Owner("Kira", new DriveLicense("B"));
+//            session.save(owner);
+            Owner owner = session.find(Owner.class, 1);
+//            Car bmw = new Car("BMW", Type.SEDAN, 200, 20000, 2013, owner);
+//            Car audi = new Car("AUDI", Type.HATCHBACK, 190, 24000, 2018, owner);
+            Owner owner1 = session.find(Owner.class, 2);
+//            Car volvo = new Car("Volvo", Type.HATCHBACK, 220, 25000, 2022, owner1);
+//            session.save(volvo);
+//            System.out.println(owner);
+            Car car = session.find(Car.class, 3);
+            System.out.println(car.getOwner());
 
-            session.save(word1);
-            session.save(word2);
-            session.save(word3);
-
-            List<Word> words = session.createQuery("from Word", Word.class).list();
-            System.out.println(words);
-
-            Car car = new Car();
-            car.setModel("BMW");
-            car.setBody(Type.HATCHBACK);
-            car.setPower(200);
-            car.setPrice(2000);
-            car.setYear(2022);
-            session.save(car);
-
-            List<Car> cars = session.createQuery("from Car", Car.class).list();
-            System.out.println(cars);
+//            Car car = new Car();
+//            car.setModel("BMW");
+//            car.setBody(Type.HATCHBACK);
+//            car.setPower(200);
+//            car.setPrice(2000);
+//            car.setYear(2022);
+//            session.save(car);
+//
+//            List<Car> cars = session.createQuery("from Car", Car.class).list();
+//            System.out.println(cars);
             transaction.commit();
 
         }
